@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Notes Sharing System</title>
+<style>
+:root{--bg:#f4f7fb;--panel:#fff;--text:#172033;--muted:#64748b;--primary:#315efb;--line:#e5eaf2;--green:#15803d;--red:#b91c1c;--shadow:0 10px 30px rgba(25,45,90,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}body.dark{--bg:#101827;--panel:#182337;--text:#edf2ff;--muted:#aab7cc;--line:#2c3a51;--shadow:0 10px 30px rgba(0,0,0,.18)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 14px;background:var(--primary);color:white;font-weight:600}button.secondary{background:#e9efff;color:#244bd0}body.dark button.secondary{background:#293b60;color:#dce6ff}button.danger{background:#b91c1c}button.success{background:#15803d}button.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.5;cursor:not-allowed}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--primary)}label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}.muted{color:var(--muted)}.small{font-size:12px}.hidden{display:none!important}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:22px;background:linear-gradient(135deg,#eaf0ff,#f8fbff)}body.dark .login-wrap{background:linear-gradient(135deg,#101827,#1c2b45)}
+.login-card{width:min(440px,100%);background:var(--panel);padding:30px;border-radius:18px;box-shadow:var(--shadow)}.brand{text-align:center;margin-bottom:22px}.brand-mark{width:58px;height:58px;border-radius:16px;background:#e9efff;color:#315efb;display:grid;place-items:center;font-size:28px;margin:0 auto 12px}.brand h1{font-size:23px;margin:0 0 7px}.brand p{margin:0;color:var(--muted);font-size:14px}.field{margin:12px 0}.login-card button[type=submit]{width:100%;margin-top:16px}.demo{margin-top:18px;background:var(--bg);border:1px solid var(--line);padding:12px;border-radius:10px;font-size:12px;line-height:1.8}
+.app{min-height:100vh}.topbar{height:66px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:3}.top-left{display:flex;align-items:center;gap:10px;font-weight:800}.top-logo{background:#e9efff;color:#315efb;border-radius:10px;padding:9px}.top-actions{display:flex;align-items:center;gap:10px}.layout{display:flex;min-height:calc(100vh - 66px)}.sidebar{width:230px;background:var(--panel);border-right:1px solid var(--line);padding:20px 14px;flex-shrink:0}.userbox{padding:12px;background:var(--bg);border-radius:12px;margin-bottom:20px}.userbox strong{display:block;margin-bottom:4px}.navbtn{width:100%;text-align:left;background:transparent;color:var(--muted);margin:3px 0;padding:12px;border-radius:9px;font-weight:600}.navbtn.active,.navbtn:hover{background:#eaf0ff;color:#244bd0}body.dark .navbtn.active,body.dark .navbtn:hover{background:#293b60;color:#dce6ff}.main{padding:28px;width:100%;max-width:1250px;margin:0 auto}.page-title{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:22px}.page-title h2{margin:0 0 7px;font-size:25px}.page-title p{margin:0;color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:22px}.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}.stat span{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:28px;margin-top:10px}.card h3{margin:0 0 14px;font-size:17px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.toolbar{display:grid;grid-template-columns:1fr 190px;gap:10px;margin-bottom:15px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-weight:700;background:var(--bg)}.pill{display:inline-block;padding:5px 9px;border-radius:30px;font-size:11px;font-weight:700}.pending{background:#fff2d6;color:#965b00}.approved{background:#dcfce7;color:#166534}.rejected{background:#fee2e2;color:#991b1b}.empty{text-align:center;padding:28px;color:var(--muted)}.note-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.note{border:1px solid var(--line);border-radius:12px;padding:15px}.note h4{margin:0 0 7px}.note p{font-size:13px;color:var(--muted);line-height:1.5}.note-meta{font-size:12px;color:var(--muted);margin:8px 0}.toast{position:fixed;right:20px;bottom:20px;background:#172033;color:white;padding:13px 17px;border-radius:10px;box-shadow:var(--shadow);z-index:10;max-width:calc(100% - 40px)}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{width:190px}.main{padding:20px}}
+@media(max-width:620px){.topbar{padding:0 13px}.top-actions .user-label{display:none}.layout{display:block}.sidebar{width:auto;border-right:0;border-bottom:1px solid var(--line);display:flex;overflow:auto;padding:8px}.userbox{display:none}.navbtn{white-space:nowrap;width:auto;margin:0 3px;padding:10px}.main{padding:16px}.grid{grid-template-columns:1fr 1fr;gap:9px}.stat{padding:13px}.stat strong{font-size:23px}.form-grid,.toolbar,.note-list{grid-template-columns:1fr}.page-title h2{font-size:21px}.top-left{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-wrap">
+  <form id="loginForm" class="login-card">
+    <div class="brand"><div class="brand-mark">📚</div><h1>Student Notes Sharing</h1><p>Learn together. Share knowledge.</p></div>
+    <div class="field"><label for="username">Username</label><input id="username" autocomplete="username" placeholder="Enter username" required></div>
+    <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required></div>
+    <button type="submit">Login</button>
+    <div class="demo"><strong>Demo student:</strong> student01 / 12345<br><strong>Demo admin:</strong> admin / admin123</div>
+    <p id="loginError" class="small" style="color:#b91c1c;margin-bottom:0"></p>
+  </form>
+</div>
+<div id="appScreen" class="app hidden">
+  <header class="topbar"><div class="top-left"><span class="top-logo">📚</span> Student Notes Sharing System</div><div class="top-actions"><span class="user-label muted small" id="topUser"></span><button class="ghost" id="themeBtn" type="button">🌙 Theme</button><button class="secondary" id="logoutBtn" type="button">Logout</button></div></header>
+  <div class="layout"><aside class="sidebar"><div class="userbox"><strong id="sideName"></strong><span class="muted small" id="sideRole"></span></div><nav id="navigation"></nav></aside><main class="main" id="mainContent"></main></div>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const USERS_KEY='sns_users_v1', NOTES_KEY='sns_notes_v1', SESSION_KEY='sns_session_v1';
+const defaults=[
+ {username:'student01',password:'12345',name:'Prashant',role:'student'},
+ {username:'student02',password:'23456',name:'Raju',role:'student'},
+ {username:'student03',password:'34567',name:'Samarth',role:'student'},
+ {username:'admin',password:'admin123',name:'Administrator',role:'admin'}
+];
+let users=[],notes=[],current=null,page='dashboard';
+function load(){
+ try{users=JSON.parse(localStorage.getItem(USERS_KEY)||'null')||defaults.slice();}catch(e){users=defaults.slice();}
+ try{notes=JSON.parse(localStorage.getItem(NOTES_KEY)||'[]');if(!Array.isArray(notes))notes=[];}catch(e){notes=[];}
+ // Ensure demo accounts remain available in this learning/demo application.
+ defaults.forEach(d=>{if(!users.some(u=>u.username===d.username))users.push({...d});});
+ saveUsers();
+}
+function saveUsers(){localStorage.setItem(USERS_KEY,JSON.stringify(users));}
+function saveNotes(){localStorage.setItem(NOTES_KEY,JSON.stringify(notes));}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.remove('hidden');setTimeout(()=>$('toast').classList.add('hidden'),2600);}
+function showLogin(){current=null;sessionStorage.removeItem(SESSION_KEY);$('appScreen').classList.add('hidden');$('loginScreen').classList.remove('hidden');$('password').value='';}
+function login(username,password){
+ const u=users.find(x=>x.username.toLowerCase()===username.trim().toLowerCase()&&x.password===password);
+ if(!u)return false;current=u;sessionStorage.setItem(SESSION_KEY,u.username);page='dashboard';$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');render();return true;
+}
+$('loginForm').addEventListener('submit',e=>{e.preventDefault();const ok=login($('username').value,$('password').value);$('loginError').textContent=ok?'':'Incorrect username or password. Please try again.';});
+$('logoutBtn').addEventListener('click',showLogin);
+$('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('dark');localStorage.setItem('sns_dark',document.body.classList.contains('dark')?'1':'0');});
+if(localStorage.getItem('sns_dark')==='1')document.body.classList.add('dark');
+function navItems(){return current.role==='admin'?[['dashboard','▦ Dashboard'],['manage','✓ Manage Notes'],['students','♙ Students']]:[['dashboard','▦ Dashboard'],['upload','＋ Upload Notes'],['notes','▤ View Notes'],['profile','♙ My Profile']];}
+function go(p){page=p;render();}
+function render(){
+ $('topUser').textContent=current.name+' ('+current.role+')';$('sideName').textContent=current.name;$('sideRole').textContent=current.role==='admin'?'Administrator':'Student';
+ $('navigation').innerHTML=navItems().map(([p,t])=>`<button class="navbtn ${page===p?'active':''}" data-page="${p}">${t}</button>`).join('');
+ $('navigation').querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+ if(current.role==='admin')renderAdmin();else renderStudent();
+}
+function stat(label,value){return `<div class="stat"><span>${label}</span><strong>${value}</strong></div>`;}
+function title(h,p){return `<div class="page-title"><div><h2>${h}</h2><p>${p}</p></div></div>`;}
+function renderStudent(){
+ if(page==='dashboard'){
+ const mine=notes.filter(n=>n.owner===current.username),approved=notes.filter(n=>n.status==='approved');
+ $('mainContent').innerHTML=title('Student Dashboard','Welcome back, '+esc(current.name)+'.')+
+ `<div class="grid">${stat('Available Notes',approved.length)}${stat('My Uploads',mine.length)}${stat('Pending',mine.filter(n=>n.status==='pending').length)}${stat('Rejected',mine.filter(n=>n.status==='rejected').length)}</div>
+ <div class="card"><h3>Recently approved notes</h3>${renderNoteCards(approved.slice().reverse().slice(0,4))}</div>`;
+ }else if(page==='upload'){
+ $('mainContent').innerHTML=title('Upload Notes','Upload your study material for admin review.')+`<div class="card"><h3>Note details</h3><form id="uploadForm"><div class="form-grid"><div><label>Note title *</label><input name="title" required maxlength="80" placeholder="e.g. Data Structures Unit 1"></div><div><label>Subject *</label><select name="subject" required><option value="">Select subject</option>${['Mathematics','Python','Java','AI','Electronics','C Programming','Physics','Chemistry','Other'].map(s=>`<option>${s}</option>`).join('')}</select></div><div class="full"><label>Description</label><textarea name="description" rows="3" maxlength="300" placeholder="Short description (optional)"></textarea></div><div class="full"><label>Select file (PDF, DOC, DOCX, TXT; max 3 MB) *</label><input type="file" name="file" accept=".pdf,.doc,.docx,.txt" required></div></div><div class="actions"><button type="submit">Submit for approval</button></div><p class="muted small">Your note will be visible to other students after admin approval.</p></form></div>`;
+ $('uploadForm').addEventListener('submit',uploadNote);
+ }else if(page==='notes'){
+ const approved=notes.filter(n=>n.status==='approved');
+ $('mainContent').innerHTML=title('View Notes','Search and download admin-approved study material.')+`<div class="toolbar"><input id="searchNotes" placeholder="Search title, subject, uploader..."><select id="subjectFilter"><option value="">All subjects</option>${[...new Set(approved.map(n=>n.subject))].sort().map(s=>`<option>${esc(s)}</option>`).join('')}</select></div><div id="noteResults">${renderNoteCards(approved)}</div>`;
+ const update=()=>{const q=$('searchNotes').value.toLowerCase(),s=$('subjectFilter').value;const filtered=approved.filter(n=>(!s||n.subject===s)&&[n.title,n.subject,n.ownerName,n.description].join(' ').toLowerCase().includes(q));$('noteResults').innerHTML=renderNoteCards(filtered);bindNoteButtons();};
+ $('searchNotes').addEventListener('input',update);$('subjectFilter').addEventListener('change',update);bindNoteButtons();
+ }else if(page==='profile'){
+ $('mainContent').innerHTML=title('My Profile','Update your display name or change your password.')+`<div class="card"><form id="profileForm"><label>Username</label><input value="${esc(current.username)}" disabled><label>Student name</label><input name="name" required maxlength="50" value="${esc(current.name)}"><label>New password (leave blank to keep current)</label><input name="password" type="password" minlength="4" placeholder="Enter new password"><div class="actions"><button>Save changes</button></div></form></div>`;
+ $('profileForm').addEventListener('submit',e=>{e.preventDefault();const fd=new FormData(e.currentTarget);const u=users.find(x=>x.username===current.username);u.name=String(fd.get('name')).trim();if(fd.get('password'))u.password=String(fd.get('password'));current=u;saveUsers();render();toast('Profile updated.');});
+ }else{page='dashboard';renderStudent();}
+}
+function renderNoteCards(arr){
+ if(!arr.length)return '<div class="empty">No notes found yet.</div>';
+ return `<div class="note-list">${arr.map(n=>`<article class="note"><h4>${esc(n.title)}</h4><div class="note-meta">${esc(n.subject)} · by ${esc(n.ownerName)} · ${esc(n.date)}</div><p>${esc(n.description||'No description provided.')}</p><div class="actions"><button class="secondary" data-download="${esc(n.id)}">Download</button>${n.owner===current.username?`<button class="danger" data-delete="${esc(n.id)}">Delete</button>`:''}</div></article>`).join('')}</div>`;
+}
+function bindNoteButtons(){
+ document.querySelectorAll('[data-download]').forEach(b=>b.addEventListener('click',()=>downloadNote(b.dataset.download)));
+ document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteNote(b.dataset.delete)));
+}
+function uploadNote(e){
+ e.preventDefault();const form=e.currentTarget;const fd=new FormData(form);const f=form.elements.file.files[0];if(!f)return;
+ const ext=f.name.split('.').pop().toLowerCase();if(!['pdf','doc','docx','txt'].includes(ext)){toast('Please select a PDF, DOC, DOCX or TXT file.');return;}
+ if(f.size>3*1024*1024){toast('File must be 3 MB or smaller.');return;}
+ const reader=new FileReader();reader.onerror=()=>toast('Could not read the selected file.');
+ reader.onload=()=>{notes.push({id:String(Date.now())+Math.random().toString(16).slice(2),title:String(fd.get('title')).trim(),subject:String(fd.get('subject')),description:String(fd.get('description')).trim(),owner:current.username,ownerName:current.name,fileName:f.name,mime:f.type||'application/octet-stream',data:reader.result,status:'pending',date:new Date().toLocaleDateString()});try{saveNotes();toast('Uploaded successfully. Waiting for admin approval.');go('dashboard');}catch(err){toast('Browser storage is full. Try a smaller file.');}};
+ reader.readAsDataURL(f);
+}
+function downloadNote(id){const n=notes.find(x=>x.id===id);if(!n||!n.data){toast('File data not found.');return;}const a=document.createElement('a');a.href=n.data;a.download=n.fileName||'notes';document.body.appendChild(a);a.click();a.remove();}
+function deleteNote(id){const n=notes.find(x=>x.id===id);if(!n)return;if(current.role!=='admin'&&n.owner!==current.username){toast('You can delete only your own notes.');return;}if(!confirm('Delete this note?'))return;notes=notes.filter(x=>x.id!==id);saveNotes();toast('Note deleted.');render();}
+function renderAdmin(){
+ const pending=notes.filter(n=>n.status==='pending').length,approved=notes.filter(n=>n.status==='approved').length;
+ if(page==='dashboard'){
+ $('mainContent').innerHTML=title('Admin Dashboard','Review student uploads and manage the system.')+`<div class="grid">${stat('Total Students',users.filter(u=>u.role==='student').length)}${stat('Total Notes',notes.length)}${stat('Pending Review',pending)}${stat('Approved Notes',approved)}</div><div class="card"><h3>Quick actions</h3><p class="muted">Open Manage Notes to approve or reject student uploads. Approved notes become visible to students.</p><button onclick="window.__go('manage')">Review pending notes</button></div>`;
+ }else if(page==='manage'){
+ $('mainContent').innerHTML=title('Manage Notes','Approve, reject, download or delete student submissions.')+`<div class="toolbar"><input id="adminSearch" placeholder="Search notes or students..."><select id="statusFilter"><option value="">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div><div class="card table-wrap"><table><thead><tr><th>Title / Subject</th><th>Student</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminRows"></tbody></table></div>`;
+ const update=()=>{const q=$('adminSearch').value.toLowerCase(),s=$('statusFilter').value;const arr=notes.filter(n=>(!s||n.status===s)&&[n.title,n.subject,n.ownerName].join(' ').toLowerCase().includes(q));$('adminRows').innerHTML=arr.length?arr.map(n=>`<tr><td><strong>${esc(n.title)}</strong><br><span class="muted">${esc(n.subject)}</span></td><td>${esc(n.ownerName)}</td><td>${esc(n.date)}</td><td><span class="pill ${esc(n.status)}">${esc(n.status)}</span></td><td><div class="actions">${n.status!=='approved'?`<button class="success" data-approve="${esc(n.id)}">Approve</button>`:''}${n.status!=='rejected'?`<button class="danger" data-reject="${esc(n.id)}">Reject</button>`:''}<button class="secondary" data-download="${esc(n.id)}">Download</button><button class="ghost" data-delete="${esc(n.id)}">Delete</button></div></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No notes found.</td></tr>';bindAdminButtons();};
+ $('adminSearch').addEventListener('input',update);$('statusFilter').addEventListener('change',update);update();
+ }else if(page==='students'){
+ const students=users.filter(u=>u.role==='student');
+ $('mainContent').innerHTML=title('Registered Students','Student accounts and their uploaded notes.')+`<div class="card table-wrap"><table><thead><tr><th>Student</th><th>Username</th><th>Total uploads</th><th>Approved</th></tr></thead><tbody>${students.map(u=>{const own=notes.filter(n=>n.owner===u.username);return `<tr><td>${esc(u.name)}</td><td>${esc(u.username)}</td><td>${own.length}</td><td>${own.filter(n=>n.status==='approved').length}</td></tr>`;}).join('')}</tbody></table></div>`;
+ }else{page='dashboard';renderAdmin();}
+}
+function bindAdminButtons(){
+ document.querySelectorAll('[data-approve]').forEach(b=>b.addEventListener('click',()=>setStatus(b.dataset.approve,'approved')));
+ document.querySelectorAll('[data-reject]').forEach(b=>b.addEventListener('click',()=>setStatus(b.dataset.reject,'rejected')));
+ document.querySelectorAll('[data-download]').forEach(b=>b.addEventListener('click',()=>downloadNote(b.dataset.download)));
+ document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteNote(b.dataset.delete)));
+}
+function setStatus(id,status){const n=notes.find(x=>x.id===id);if(!n)return;n.status=status;saveNotes();toast('Note '+status+'.');render();}
+window.__go=go;
+load();
+const saved=sessionStorage.getItem(SESSION_KEY);if(saved){const u=users.find(x=>x.username===saved);if(u){current=u;$('loginScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');render();}}
+})();
+</script>
+</body>
+</html>
